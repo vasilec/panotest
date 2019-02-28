@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="mobile-web-app-capable" content="yes" />		
+		<script type="text/javascript" src="swfobject.js">
+		</script>
+		<style type="text/css" title="Default">
+			body, div, h1, h2, h3, span, p {
+				font-family: Verdana,Arial,Helvetica,sans-serif;
+			}
+			/* fullscreen */
+			html {
+				height:100%;
+			}
+			body {
+				height:100%;
+				margin: 0px;
+				overflow:hidden; /* disable scrollbars */
+				font-size: 10pt;
+				-webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* remove highlight on tab for iOS/Android */
+			}
+			/* fix for scroll bars on webkit & >=Mac OS X Lion */ 
+			::-webkit-scrollbar {
+				background-color: rgba(0,0,0,0.5);
+				width: 0.75em;
+			}
+			::-webkit-scrollbar-thumb {
+    			background-color:  rgba(255,255,255,0.5);
+			}
+		</style>	
+	</head>
+	<body>
+<!-- - - - - - - 8<- - - - - - cut here - - - - - 8<- - - - - - - -->
+		<script type="text/javascript" src="pano2vr_player.js">
+		</script>
+		<script type="text/javascript" src="skin.js">
+		</script>
+		<script type="text/javascript" src="pano2vrgyro.js">
+		</script>
+		<div id="container" style="width:100%;height:100%;overflow:hidden;">
+		<br>Loading...<br><br>
+		This content requires HTML5/CSS3, WebGL, or Adobe Flash Player Version 10 or higher.
+		</div>
+		<script type="text/javascript">
+		var startNode=document.location.hash.substring(1);
+		if (("onhashchange" in window) && (!(/MSIE (\d+\.\d+);/.test(navigator.userAgent)))) {
+			window.onhashchange = function () {
+				pano.openNext('{' + window.location.hash.substring(1) + '}');
+         	}
+	    } else {
+        	var lastHash = window.location.hash;
+        	window.setInterval(function () {
+	           	if (window.location.hash != lastHash) {
+   	        		lastHash = window.location.hash;
+					pano.openNext('{' + window.location.hash.substring(1) + '}');
+        	   	}
+        	}, 100);
+		}
+	
+		// check for CSS3 3D transformations and WebGL
+		if (ggHasHtml5Css3D() || ggHasWebGL()) {
+			// use HTML5 panorama
+			// create the panorama player with the container
+			pano=new pano2vrPlayer("container");
+		} else 
+		if (swfobject.hasFlashPlayerVersion("10.0.0")) {
+			var flashvars = {};
+			var params = {};
+			// enable javascript interface
+			flashvars.externalinterface="1";
+			params.quality = "high";
+			params.bgcolor = "";
+			params.allowscriptaccess = "sameDomain";
+			params.allowfullscreen = "true";
+			var attributes = {};
+			attributes.id = "flashpano";
+			attributes.name = "flashpano";
+			attributes.align = "middle";
+			if (startNode.length>0) {
+				flashvars.startnode=startNode;
+			}
+	
+			params.base=".";
+			params.wmode = "transparent";
+			pano=new pano2vrPlayer("container",{ useFlash:true, flashPlayerId: 'flashpano', flashContainerId:'flashcontainer'});
+			swfobject.embedSWF("pano2vr_player.swf", "flashcontainer", "100%", "100%", "10.0.0", "", flashvars, params, attributes);
+		}
+			pano.startNode=startNode;
+		// add the skin object
+		skin=new pano2vrSkin(pano);
+		// load the configuration
+		panorama='<?xml version="1.0" encoding="UTF-8"?>';
+			panorama+='<tour appversion="5.2.4" apprev="15996" start="node1">';
+			panorama+='  <panorama id="node1" hideabout="1">';
+			panorama+='    <input height="1345" leveltilesize="510" levelingpitch="0" levelbias="0.400" overlap="1" levelingroll="0" levelbiashidpi="0.400" leveltileurl="tiles/node1/cf_%c/l_%l/c_%x/tile_%y.jpg" width="1345">';
+			panorama+='      <level preload="0" height="1345" predecode="0" width="1345"/>';
+			panorama+='      <level preload="0" height="672" predecode="0" width="672"/>';
+			panorama+='      <level preload="1" height="336" predecode="1" width="336"/>';
+			panorama+='      <preview strip="1" color="0x808080"/>';
+			panorama+='    </input>';
+			panorama+='    <view fovmode="0" pannorth="0">';
+			panorama+='      <start tilt="7.82" fov="48.6" pan="-1.46" projection="4"/>';
+			panorama+='      <flyin tilt="9.55" fov="104.3" pan="-3.61" projection="4"/>';
+			panorama+='      <min tilt="-42.6" fov="5" pan="0"/>';
+			panorama+='      <max tilt="61.7" fovstereographic="270" scaletofit="1" fov="120" pan="360" fovfisheye="360"/>';
+			panorama+='    </view>';
+			panorama+='    <userdata title="" description="" author="" info="" copyright="" latitude="" customnodeid="" source="" tags="Panos" datetime="15.05.2018 14:59" comment="" longitude=""/>';
+			panorama+='    <hotspots height="20" wordwrap="1" width="180">';
+			panorama+='      <label height="20" border="1" wordwrap="1" borderalpha="1" backgroundalpha="1" borderradius="1" background="1" enabled="1" textcolor="0x000000" bordercolor="0x000000" width="180" backgroundcolor="0xffffff" textalpha="1"/>';
+			panorama+='      <polystyle mode="0" borderalpha="1" backgroundalpha="0.2509803921568627" handcursor="1" bordercolor="0x0000ff" backgroundcolor="0x0000ff"/>';
+			panorama+='      <hotspot title="&#1042;&#1088;&#1077;&#1084;&#1103; &#1088;&#1072;&#1073;&#1086;&#1090;&#1099;" description="&#1055;&#1086;&#1085;&#1077;&#1076;&#1077;&#1083;&#1100;&#1085;&#1080;&#1082; &#8211; &#1087;&#1103;&#1090;&#1085;&#1080;&#1094;&#1072; &#1089; 10.00 &#1076;&#1086; 20.00 &#xa;&#1042;&#1086;&#1089;&#1082;&#1088;&#1077;&#1089;&#1077;&#1085;&#1100;&#1077; &#8211; &#1089; 11.00 &#1076;&#1086; 19.00 &#xa;&#1057;&#1091;&#1073;&#1073;&#1086;&#1090;&#1072; &#8211; &#1074;&#1099;&#1093;&#1086;&#1076;&#1085;&#1086;&#1081; &#1076;&#1077;&#1085;&#1100; &#xa;&#1055;&#1077;&#1088;&#1074;&#1099;&#1081; &#1087;&#1086;&#1085;&#1077;&#1076;&#1077;&#1083;&#1100;&#1085;&#1080;&#1082; &#1084;&#1077;&#1089;&#1103;&#1094;&#1072; &#8211; &#1089;&#1072;&#1085;&#1080;&#1090;&#1072;&#1088;&#1085;&#1099;&#1081; &#1076;&#1077;&#1085;&#1100;" tilt="13.89" target="" url="" pan="-1.12" id="Point01" skinid="ht_info"/>';
+			panorama+='      <hotspot title="&#1042;&#1093;&#1086;&#1076;" description="" tilt="7.6" target="174.3/2.6/70.0" url="{node2}" pan="-1.34" id="Point02" skinid="ht_node"/>';
+			panorama+='    </hotspots>';
+			panorama+='    <media/>';
+			panorama+='    <transition blendcolor="0x000000" zoomoutpause="1" enabled="1" blendtime="1" type="diptocolor" zoomfov="20" zoomout="0" zoomin="0" softedge="0" zoomspeed="2"/>';
+			panorama+='    <flyintransition speed="2.00" enabled="1"/>';
+			panorama+='    <control lockedwheel="0" simulatemass="1" lockedkeyboard="0" contextfullscreen="0" sensitivity="8" rubberband="0" speedwheel="1" invertcontrol="1" contextprojections="0" dblclickfullscreen="0" invertwheel="0" lockedkeyboardzoom="0" hideabout="1" lockedmouse="0"/>';
+			panorama+='  </panorama>';
+			panorama+='  <panorama id="node2" hideabout="1">';
+			panorama+='    <input height="1345" leveltilesize="510" levelingpitch="0" levelbias="0.400" overlap="1" levelingroll="-0.2" levelbiashidpi="0.400" leveltileurl="tiles/node2/cf_%c/l_%l/c_%x/tile_%y.jpg" width="1345">';
+			panorama+='      <level preload="0" height="1345" predecode="0" width="1345"/>';
+			panorama+='      <level preload="0" height="672" predecode="0" width="672"/>';
+			panorama+='      <level preload="1" height="336" predecode="1" width="336"/>';
+			panorama+='      <preview strip="1" color="0x808080"/>';
+			panorama+='    </input>';
+			panorama+='    <view fovmode="0" pannorth="0">';
+			panorama+='      <start tilt="-0.8" fov="64.2" pan="176.42" projection="4"/>';
+			panorama+='      <flyin tilt="-7.85" fov="64.2" pan="175.88" projection="4"/>';
+			panorama+='      <min tilt="-42.8" fov="5" pan="0"/>';
+			panorama+='      <max tilt="52.4" fovstereographic="270" scaletofit="1" fov="120" pan="360" fovfisheye="360"/>';
+			panorama+='    </view>';
+			panorama+='    <userdata title="" description="" author="" info="" copyright="" latitude="" customnodeid="" source="" tags="Panos" datetime="14.05.2018 14:38" comment="" longitude=""/>';
+			panorama+='    <hotspots height="20" wordwrap="1" width="180">';
+			panorama+='      <label height="20" border="1" wordwrap="1" borderalpha="1" backgroundalpha="1" borderradius="1" background="1" enabled="1" textcolor="0x000000" bordercolor="0x000000" width="180" backgroundcolor="0xffffff" textalpha="1"/>';
+			panorama+='      <polystyle mode="0" borderalpha="1" backgroundalpha="0.2509803921568627" handcursor="1" bordercolor="0x0000ff" backgroundcolor="0x0000ff"/>';
+			panorama+='      <hotspot title="&#1057;&#1077;&#1082;&#1090;&#1086;&#1088; &#1088;&#1077;&#1075;&#1080;&#1089;&#1090;&#1088;&#1072;&#1094;&#1080;&#1080; &#1095;&#1080;&#1090;&#1072;&#1090;&#1077;&#1083;&#1077;&#1081;" description="&#1044;&#1083;&#1103; &#1079;&#1072;&#1087;&#1080;&#1089;&#1080; &#1074; &#1073;&#1080;&#1073;&#1083;&#1080;&#1086;&#1090;&#1077;&#1082;&#1091; &#1085;&#1077;&#1086;&#1073;&#1093;&#1086;&#1076;&#1080;&#1084;&#1086; &#1080;&#1084;&#1077;&#1090;&#1100; &#1087;&#1072;&#1089;&#1087;&#1086;&#1088;&#1090; &#1080;&#1083;&#1080; &#1080;&#1085;&#1086;&#1081; &#1076;&#1086;&#1082;&#1091;&#1084;&#1077;&#1085;&#1090;, &#1091;&#1076;&#1086;&#1089;&#1090;&#1086;&#1074;&#1077;&#1088;&#1103;&#1102;&#1097;&#1080;&#1081; &#1083;&#1080;&#1095;&#1085;&#1086;&#1089;&#1090;&#1100; &#1080; &#1092;&#1086;&#1090;&#1086;&#1075;&#1088;&#1072;&#1092;&#1080;&#1102;. &#1063;&#1080;&#1090;&#1072;&#1090;&#1077;&#1083;&#1100;&#1089;&#1082;&#1080;&#1081; &#1073;&#1080;&#1083;&#1077;&#1090; &#1073;&#1080;&#1073;&#1083;&#1080;&#1086;&#1090;&#1077;&#1082;&#1080; &#1074;&#1099;&#1076;&#1072;&#1105;&#1090;&#1089;&#1103; &#1085;&#1072; 5 &#1083;&#1077;&#1090;. &#1045;&#1078;&#1077;&#1075;&#1086;&#1076;&#1085;&#1086; &#1087;&#1088;&#1086;&#1093;&#1086;&#1076;&#1080;&#1090; &#1087;&#1077;&#1088;&#1077;&#1088;&#1077;&#1075;&#1080;&#1089;&#1090;&#1088;&#1072;&#1094;&#1080;&#1103; &#1095;&#1080;&#1090;&#1072;&#1090;&#1077;&#1083;&#1077;&#1081;." tilt="6.16" target="" url="" pan="-149.65" id="Point01" skinid="ht_info"/>';
+			panorama+='      <hotspot title="&#1054;&#1090;&#1076;&#1077;&#1083; &#1072;&#1073;&#1086;&#1085;&#1077;&#1084;&#1077;&#1085;&#1090;&#1072;" description="&#1057;&#1072;&#1084;&#1099;&#1081; &#1087;&#1086;&#1087;&#1091;&#1083;&#1103;&#1088;&#1085;&#1099;&#1081; &#1080; &#1091;&#1076;&#1086;&#1073;&#1085;&#1099;&#1081; &#1076;&#1083;&#1103; &#1095;&#1080;&#1090;&#1072;&#1090;&#1077;&#1083;&#1077;&#1081; &#1086;&#1090;&#1076;&#1077;&#1083;, &#1075;&#1076;&#1077; &#1084;&#1086;&#1078;&#1085;&#1086; &#1074;&#1079;&#1103;&#1090;&#1100; &#1082;&#1085;&#1080;&#1075;&#1080; &#1085;&#1072; &#1076;&#1086;&#1084;, &#1077;&#1089;&#1083;&#1080; &#1077;&#1089;&#1090;&#1100; &#1088;&#1077;&#1075;&#1080;&#1089;&#1090;&#1088;&#1072;&#1094;&#1080;&#1103; &#1074; &#1075;. &#1043;&#1086;&#1084;&#1077;&#1083;&#1077; &#1080;&#1083;&#1080; &#1042;&#1099; &#1103;&#1074;&#1083;&#1103;&#1077;&#1090;&#1077;&#1089;&#1100; &#1089;&#1090;&#1091;&#1076;&#1077;&#1085;&#1090;&#1086;&#1084; &#1074;&#1099;&#1089;&#1096;&#1077;&#1075;&#1086; &#1080; &#1089;&#1088;&#1077;&#1076;&#1085;&#1077;&#1075;&#1086; &#1091;&#1095;&#1077;&#1073;&#1085;&#1086;&#1075;&#1086; &#1079;&#1072;&#1074;&#1077;&#1076;&#1077;&#1085;&#1080;&#1103;. &#1044;&#1083;&#1103; &#1085;&#1077;&#1079;&#1088;&#1103;&#1095;&#1080;&#1093; &#1087;&#1086;&#1083;&#1100;&#1079;&#1086;&#1074;&#1072;&#1090;&#1077;&#1083;&#1077;&#1081; &#1088;&#1072;&#1073;&#1086;&#1090;&#1072;&#1077;&#1090; &#1090;&#1080;&#1092;&#1083;&#1086;&#1091;&#1075;&#1086;&#1083;&#1086;&#1082;." tilt="8.72" target="" url="" pan="-88.56" id="Point02" skinid="ht_info"/>';
+			panorama+='      <hotspot title="&#1052;&#1091;&#1079;&#1077;&#1081; &#1088;&#1077;&#1076;&#1082;&#1086;&#1081; &#1082;&#1085;&#1080;&#1075;&#1080;" description="&#1042; &#1101;&#1082;&#1089;&#1087;&#1086;&#1079;&#1080;&#1094;&#1080;&#1080; &#1052;&#1091;&#1079;&#1077;&#1103; &#1088;&#1077;&#1076;&#1082;&#1086;&#1081; &#1082;&#1085;&#1080;&#1075;&#1080; - &#1091;&#1085;&#1080;&#1082;&#1072;&#1083;&#1100;&#1085;&#1086;&#1077; &#1089;&#1086;&#1073;&#1088;&#1072;&#1085;&#1080;&#1077; &#1092;&#1072;&#1084;&#1080;&#1083;&#1100;&#1085;&#1086;&#1081; &#1073;&#1080;&#1073;&#1083;&#1080;&#1086;&#1090;&#1077;&#1082;&#1080; &#1082;&#1085;&#1103;&#1079;&#1077;&#1081; &#1055;&#1072;&#1089;&#1082;&#1077;&#1074;&#1080;&#1095;&#1077;&#1081;, &#1076;&#1086;&#1087;&#1086;&#1083;&#1085;&#1077;&#1085;&#1085;&#1086;&#1077; &#1088;&#1077;&#1076;&#1082;&#1080;&#1084;&#1080; &#1080;&#1079;&#1076;&#1072;&#1085;&#1080;&#1103;&#1084;&#1080;, &#1092;&#1072;&#1082;&#1089;&#1080;&#1084;&#1080;&#1083;&#1077; &#1075;&#1088;&#1072;&#1092;&#1080;&#1095;&#1077;&#1089;&#1082;&#1080;&#1093; &#1086;&#1088;&#1080;&#1075;&#1080;&#1085;&#1072;&#1083;&#1086;&#1074; &#1080; &#1073;&#1086;&#1075;&#1072;&#1090;&#1086;&#1081; &#1082;&#1086;&#1083;&#1083;&#1077;&#1082;&#1094;&#1080;&#1077;&#1081; &#1084;&#1080;&#1085;&#1080;&#1072;&#1090;&#1102;&#1088;&#1085;&#1099;&#1093; &#1082;&#1085;&#1080;&#1075;." tilt="10.39" target="" url="" pan="90.26" id="Point03" skinid="ht_info"/>';
+			panorama+='      <hotspot title="&#1040;&#1088;&#1090;-&#1082;&#1072;&#1092;&#1077;" description="&#1042; &#1072;&#1088;&#1090;-&#1082;&#1072;&#1092;&#1077; &#1087;&#1088;&#1086;&#1093;&#1086;&#1076;&#1103;&#1090; &#1087;&#1088;&#1077;&#1079;&#1077;&#1085;&#1090;&#1072;&#1094;&#1080;&#1080; &#1074;&#1099;&#1089;&#1090;&#1072;&#1074;&#1086;&#1082;, &#1079;&#1072;&#1089;&#1077;&#1076;&#1072;&#1085;&#1080;&#1103; &#1053;&#1072;&#1091;&#1095;&#1085;&#1086;&#1075;&#1086; &#1082;&#1072;&#1092;&#1077;, &#1074;&#1089;&#1090;&#1088;&#1077;&#1095;&#1080; &#1074; &#1051;&#1080;&#1090;&#1077;&#1088;&#1072;&#1090;&#1091;&#1088;&#1085;&#1086;-&#1084;&#1091;&#1079;&#1099;&#1082;&#1072;&#1083;&#1100;&#1085;&#1086;&#1084; &#1089;&#1072;&#1083;&#1086;&#1085;&#1077;, &#1090;&#1074;&#1086;&#1088;&#1095;&#1077;&#1089;&#1082;&#1080;&#1077; &#1074;&#1089;&#1090;&#1088;&#1077;&#1095;&#1080; &#1089; &#1080;&#1079;&#1074;&#1077;&#1089;&#1090;&#1085;&#1099;&#1084;&#1080; &#1087;&#1080;&#1089;&#1072;&#1090;&#1077;&#1083;&#1103;&#1084;&#1080;." tilt="7.83" target="" url="{node2}" pan="142.92" id="Point04" skinid="ht_node"/>';
+			panorama+='    </hotspots>';
+			panorama+='    <media/>';
+			panorama+='    <transition blendcolor="0x000000" zoomoutpause="1" enabled="1" blendtime="1" type="diptocolor" zoomfov="20" zoomout="0" zoomin="0" softedge="0" zoomspeed="2"/>';
+			panorama+='    <flyintransition speed="2.00" enabled="1"/>';
+			panorama+='    <control lockedwheel="0" simulatemass="1" lockedkeyboard="0" contextfullscreen="0" sensitivity="8" rubberband="0" speedwheel="1" invertcontrol="1" contextprojections="0" dblclickfullscreen="0" invertwheel="0" lockedkeyboardzoom="0" hideabout="1" lockedmouse="0"/>';
+			panorama+='  </panorama>';
+			panorama+='</tour>';
+			panorama+='';
+		pano.readConfigString(panorama);
+			gyro=new pano2vrGyro(pano,"container"); gyro.setUseMoveTo(false);
+		</script>
+		<noscript>
+			<p><b>Please enable Javascript!</b></p>
+		</noscript>
+<!-- - - - - - - 8<- - - - - - cut here - - - - - 8<- - - - - - - --> 
+		<!-- Hack needed to hide the url bar on iOS 9, iPhone 5s --> 
+		<div style="width:1px;height:1px;"></div>
+	</body>
+</html>
